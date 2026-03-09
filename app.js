@@ -1,35 +1,17 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
+const app = express();
 
-const server = http.createServer((req, res) => {
-    const url = req.url;
-    const method = req.method;
-    // Handle GET request to root URL
-    if (url === '/') {
-        res.write('<html>');
-        res.write('<head><title>Home Page</title></head>');
-        res.write('<body><form action="/message" method="POST"><input type="text" name="message" placeholder="Enter message"><button type="submit">Send</button></form></body>');
-        res.write('</html>');
-        return res.end();
-    }
-    // Handle POST request to /message
-    if (url === '/message' && method === 'POST') {
-        const body = [];
-        req.on('data', (chunk) => {
-            console.log(chunk);
-            body.push(chunk);
-        });
-        req.on('end', () => {
-            const parsedBody = Buffer.concat(body).toString();
-            const message = parsedBody.split('=')[1];
-            fs.writeFileSync('messages.txt', message);
-        });
-        res.writeHead(302, { 'Location': '/' });
-        return res.end();
-    }
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<h1>Hello World</h1>');
-    res.end();
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+const bodyParser = require('body-parser');
+
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(shopRoutes);
+app.use('/admin', adminRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).send('<h1>Page Not Found</h1>');
 });
 
-server.listen(3000);
+app.listen(3000);   
