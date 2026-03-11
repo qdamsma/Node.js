@@ -1,5 +1,4 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <%- include('../includes/navigation.ejs') %>
@@ -11,10 +10,13 @@
             <li class="product-card">
                 <article> 
                     <h2><%= product.title %></h2>
-                    <p class="product-price">€ 9,99</p>
-                    <p class="product-description">A short description of this product.</p>
+                    <p class="product-price">€ <%= product.price %></p>
+                    <p class="product-description"><%= product.description %></p>
                     <footer>
-                        <button type="button">Add to cart</button>
+                        <form action="/add-to-cart" method="POST">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <button type="submit">Add to cart</button>
+                        </form>
                     </footer>
                 </article>
             </li>
