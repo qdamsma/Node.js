@@ -1,0 +1,25 @@
+$primary-color: #00695c;
+$input-border-color: #a1a1a1;
+
+.form-control {
+  margin: 1rem 0;
+
+  label,
+  input,
+  textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  input,
+  textarea {
+    border: 1px solid $input-border-color;
+    font: inherit;
+    border-radius: 2px;
+
+    &:focus {
+      outline-color: $primary-color;
+    }
+  }
+}
