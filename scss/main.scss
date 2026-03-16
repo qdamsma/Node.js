@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
-$primary-color: #00695c;
-$accent-color: #ffeb3b;
+$primary-color: #0062e2;
+$accent-color: #bbffe7;
 $mobile-nav-width: 30rem;
 $breakpoint-md: 768px;
 
@@ -155,6 +155,10 @@ form {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: stretch;
+}
+
+.centered {
+  text-align: center;
 }
 
 // Card
