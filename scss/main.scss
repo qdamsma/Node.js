@@ -161,6 +161,15 @@ form {
   text-align: center;
 }
 
+.image {
+  height: 20rem;
+}
+
+.image img{
+  height: 100%
+}
+
+
 // Card
 .card {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
