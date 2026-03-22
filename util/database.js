@@ -1,6 +1,28 @@
-require('dotenv').config();
-const Sequelize = require('sequelize');
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {dialect: process.env.DB_DIALECT, host: process.env.DB_HOST});
+let _db;
 
-module.exports = sequelize;
+const mongoConnect = (callback) => {
+    MongoClient.connect(process.env.MONGO_URI)
+    .then(client => {
+        console.log('Connected to database');
+        _db = client.db()
+        callback();
+    })
+    .catch(err => {
+        console.error(err);
+        throw err;
+    });
+
+};
+
+const getDb = () => {
+    if (_db) {
+        return _db;
+    }
+    throw 'No database found!'
+}
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
