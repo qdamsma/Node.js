@@ -1,38 +1,58 @@
 const getDb = require('../util/database').getDb;
+const mongodb = require('mongodb');
+const ObjectId = mongodb.ObjectId;
 
 class Product {
-    constructor(title, price, description, imageUrl) {
+    constructor(title, price, description, imageUrl, id) {
         this.title = title;
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
+        this._id = id;
     }
 
     save() {
-        
+        const db = getDb();
+        let dbOp;
+        if (this._id){
+            dbOp = db.collection('products').updateOne({_id: new ObjectId(this._id)}, {$set: this});
+        } else {
+            dbOp = db.collection('products').insertOne(this);
+        }
+        return dbOp
+        .then(result => {
+
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    static fetchAll() {
+        const db = getDb();
+        return db.collection('products')
+        .find()
+        .toArray()
+        .then(products => {
+            return products;
+        })
+        .catch(err => {
+            console.log(err);
+        });;
+    }
+
+    static findById(prodId){
+        const db = getDb();
+        return db.collection('products')
+        .find({ _id: new ObjectId(prodId) })
+        .next()
+        .then(product => {
+            return product;
+        })
+        .catch(err => {
+            console.log(err);
+        });;
     }
 }
-
-const Product = sequelize.define('product', {
-    id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        allowNull: false,
-        primaryKey: true
-    },
-    title: Sequelize.STRING,
-    price: {
-        type: Sequelize.DOUBLE,
-        allowNull: false
-    },
-    imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    description: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-});
 
 module.exports = Product;
