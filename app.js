@@ -4,7 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;;
+const mongoConnect = require('./util/database').mongoConnect;
+const User = require('./models/user')
 
 const app = express();
 
@@ -18,8 +19,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 app.use((req, res, next) => {
-    // req.user = app.locals.user;
-    next();
+    User.findById('69c11e689e8807a57ee5464b')
+    .then(user => {
+        req.user = user;
+        next();
+    })
+    .catch(err => { console.log(err)})
 });
 
 app.use(shopRoutes);
