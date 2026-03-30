@@ -22,16 +22,6 @@ const store = new MongoDBStore({
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.use((req, res, next) => {
-  if (!req.session || !req.session.userId) return next(); // ← Extra check op req.session
-  User.findById(req.session.userId)
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
-});
-
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
@@ -46,6 +36,16 @@ app.use(
     store: store
   })
 );
+
+app.use((req, res, next) => {
+  if (!req.session || !req.session.user) return next();
+  User.findById(req.session.user)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
