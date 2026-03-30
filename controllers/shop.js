@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 exports.getProducts = (req, res, next) => {
     Product.find().then(products => {
-        res.render('shop/product-list', { prods: products, pageTitle: 'All products', path: '/products', isAuthenticated: req.session.isLoggedIn });
+        res.render('shop/product-list', { prods: products, pageTitle: 'All products', path: '/products'});
     })
         .catch(err => console.log(err));
 };
@@ -15,7 +15,7 @@ exports.getProduct = (req, res, next) => {
         return next();
     }
     Product.findById(prodId).then(product => {
-        res.render('shop/product-detail', { product: product, pageTitle: product.title, path: '/products', isAuthenticated: req.session.isLoggedIn });
+        res.render('shop/product-detail', { product: product, pageTitle: product.title, path: '/products'});
     }).catch(err => console.log(err));
 };
 
@@ -30,7 +30,7 @@ exports.getCart = (req, res, next) => {
     req.user.populate('cart.items.productId')
         .then(user => {
             const products = user.cart.items;
-            res.render('shop/cart', { pageTitle: 'Your Cart', path: '/cart', products: products, isAuthenticated: req.session.isLoggedIn });
+            res.render('shop/cart', { pageTitle: 'Your Cart', path: '/cart', products: products});
         })
         .catch(err => console.log(err));
 };
@@ -61,7 +61,7 @@ exports.postOrder = (req, res, next) => {
             });
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user._id
                 },
                 products: products
@@ -79,7 +79,7 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
     Order.find({"user.userId": req.user._id}).then(orders => {
-        res.render('shop/orders', { pageTitle: 'Your Orders', path: '/orders', orders: orders, isAuthenticated: req.session.isLoggedIn });
+        res.render('shop/orders', { pageTitle: 'Your Orders', path: '/orders', orders: orders});
     })
     .catch(err => console.log(err));
 };

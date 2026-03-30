@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const { csrfSync } = require('csrf-sync');
+const flash = require('connect-flash');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -19,7 +20,7 @@ const store = new MongoDBStore({
   collection: 'sessions'
 });
 
-const { generateToken, csrfSynchronisedProtection } = csrfSync();
+const { generateToken, csrfSynchronisedProtection } = csrfSync({getTokenFromRequest: (req) => req.body['_csrf']});
 
 
 app.set('view engine', 'ejs');
@@ -41,6 +42,7 @@ app.use(
 );
 
 app.use(csrfSynchronisedProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session || !req.session.user) return next();

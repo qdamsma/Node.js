@@ -4,6 +4,8 @@ $primary-color: #0062e2;
 $accent-color: #bbffe7;
 $mobile-nav-width: 30rem;
 $breakpoint-md: 768px;
+$message-color: #4771fa;
+$message-bg: #b9c9ff;
 
 * {
   box-sizing: border-box;
@@ -222,5 +224,29 @@ form {
   &:active {
     background-color: $primary-color;
     color: white;
+  }
+}
+
+// User messages
+$message-color: #4771fa;
+$message-bg: #b9c9ff;
+
+.user-message {
+  margin: auto;
+  width: 90%;
+  border: 1px solid $message-color;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background: $message-bg;
+  text-align: center;
+
+  &--error {
+    border-color: red;
+    background: rgb(255, 176, 176);
+    color: red;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    width: 30rem;
   }
 }
