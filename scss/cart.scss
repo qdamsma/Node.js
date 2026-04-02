@@ -1,0 +1,21 @@
+.cart__item-list {
+  list-style: none;
+  margin: auto;
+  padding: 0;
+  width: 40rem;
+  max-width: 90%;
+}
+
+.cart__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  margin-bottom: 1rem;
+
+  h1, h2 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+}

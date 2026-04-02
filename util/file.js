@@ -1,11 +1,18 @@
 const fs = require('fs');
 
 const deleteFile = (filePath) => {
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            throw (err);
-        }
-    })
-}
+    if (filePath.startsWith('http')) {
+        return Promise.resolve();
+    }
+    return new Promise((resolve, reject) => {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+};
 
 exports.deleteFile = deleteFile;

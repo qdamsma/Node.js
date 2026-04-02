@@ -142,7 +142,6 @@ form {
 .image {
   height: 20rem;
 }
-
 .image img {
   height: 100%;
 }
@@ -222,7 +221,7 @@ form {
   border: 1px solid #0062e2;
   margin: 0 1rem;
 }
-.pagination a:hover, .pagination a:active {
+.pagination a:hover, .pagination a:active, .pagination a.active {
   background: #0062e2;
   color: white;
 }

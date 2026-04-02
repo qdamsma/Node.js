@@ -21,7 +21,11 @@ const store = new MongoDBStore({
   collection: 'sessions'
 });
 
-const { generateToken, csrfSynchronisedProtection } = csrfSync({getTokenFromRequest: (req) => req.body['_csrf']});
+const { generateToken, csrfSynchronisedProtection } = csrfSync({
+    getTokenFromRequest: (req) => {
+        return req.headers['csrf-token'] || req.body['_csrf'];
+    }
+});
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -97,6 +101,7 @@ app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
   res.locals.isAuthenticated = req.session ? req.session.isLoggedIn : false;
+  res.locals.csrfToken = req.session ? generateToken(req) : '';
   res.status(500).render('500', {pageTitle: 'Error!', path: '/500'});
 })
 
