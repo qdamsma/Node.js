@@ -22,4 +22,15 @@ $input-border-color: #a1a1a1;
       outline-color: $primary-color;
     }
   }
+
+  input.invalid {
+    border-color: red;
+  }
+
+  .field-error {
+    display: block;
+    color: red;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
 }
