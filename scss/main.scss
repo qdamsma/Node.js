@@ -167,12 +167,10 @@ form {
 
 .image {
   height: 20rem;
+  img {
+    height: 100%
+  }
 }
-
-.image img{
-  height: 100%
-}
-
 
 // Card
 .card {
@@ -228,9 +226,6 @@ form {
 }
 
 // User messages
-$message-color: #4771fa;
-$message-bg: #b9c9ff;
-
 .user-message {
   margin: auto;
   width: 90%;
@@ -249,4 +244,25 @@ $message-bg: #b9c9ff;
   @media (min-width: $breakpoint-md) {
     width: 30rem;
   }
+}
+
+//paginatie
+.pagination{
+  text-align: center;
+  margin-top: 2rem;
+
+  a {
+    text-decoration: none;
+    color: $primary-color;
+    padding: 0.5rem;
+    border: 1px solid $primary-color;
+    margin: 0 1rem;
+    &:hover,
+    &:active,
+    &.active {
+      background: $primary-color;
+      color: white;
+    }
+  }
+
 }
