@@ -21,10 +21,9 @@ $input-border-color: #a1a1a1;
     &:focus {
       outline-color: $primary-color;
     }
-  }
-
-  input.invalid {
-    border-color: red;
+    &.invalid{
+      border-color: red;
+    }
   }
 
   .field-error {
