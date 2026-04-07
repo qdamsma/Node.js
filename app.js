@@ -19,10 +19,13 @@ const User = require('./models/user');
 
 const MONGODB_URI = process.env.MONGO_URI;
 
-const app = express();
 const store = new MongoDBStore({
   uri: MONGODB_URI,
-  collection: 'sessions'
+  collection: 'sessions',
+  connectionOptions: {
+    tls: true,
+    tlsAllowInvalidCertificates: false
+  }
 });
 
 const { generateToken, csrfSynchronisedProtection } = csrfSync({
@@ -116,7 +119,7 @@ app.use((error, req, res, next) => {
 })
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, {tls: true})
   .then(result => {
     // https.createServer({key: privateKey, cert: certificate}, app).listen(process.env.PORT || 3000);
     app.listen(process.env.PORT || 3000);
