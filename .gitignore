@@ -110,6 +110,9 @@ dist
 # Serverless directories
 .serverless/
 
+server.key
+server.cert
+
 # FuseBox cache
 .fusebox/
 
