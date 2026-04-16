@@ -189,13 +189,13 @@ exports.postReset = (req, res, next) => {
               <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                 <h2 style="color: #333333; margin-top: 0;">Wachtwoord resetten</h2>
                 <p style="color: #555555; line-height: 1.6;">Je hebt een wachtwoordreset aangevraagd. Klik op de knop hieronder om een nieuw wachtwoord in te stellen.</p>
-                <a href="http://localhost:3000/reset/${token}"
+                <a href="${process.env.BASE_URL}/reset/${token}"
                   style="display: inline-block; margin: 24px 0; padding: 12px 24px; background-color: #4a90e2; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">
                   Wachtwoord resetten
                 </a>
                 <p style="color: #999999; font-size: 13px; line-height: 1.6;">Deze link is 1 uur geldig. Als je geen reset hebt aangevraagd, kan je deze mail negeren.</p>
                 <hr style="border: none; border-top: 1px solid #eeeeee; margin: 24px 0;">
-                <p style="color: #bbbbbb; font-size: 12px; margin: 0;">Als de knop niet werkt, kopieer dan deze link: http://localhost:3000/reset/${token}</p>
+                <p style="color: #bbbbbb; font-size: 12px; margin: 0;">Als de knop niet werkt, kopieer dan deze link: ${process.env.BASE_URL}/reset/${token}</p>
               </div>
             </div>
           `
