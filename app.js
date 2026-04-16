@@ -13,6 +13,7 @@ const multer = require('multer');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -87,6 +88,23 @@ app.use((req, res, next) => {
   res.locals.csrfToken = generateToken(req);
   next();
 })
+
+const createLimiter = (max, view, pageTitle) => rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max,
+  handler: (req, res) => {
+    res.status(429).render(view, {
+      path: req.path,
+      pageTitle,
+      errorMessage: 'Te veel pogingen. Probeer het over 15 minuten opnieuw.',
+      oldInput: { email: '', password: '' },
+      validationErrors: []
+    });
+  }
+});
+app.post('/login', createLimiter(10, 'auth/login', 'Login'));
+app.post('/signup', createLimiter(5, 'auth/signup', 'Signup'));
+app.post('/reset', createLimiter(3, 'auth/reset', 'Reset Password'));
 
 
 app.use((req, res, next) => {

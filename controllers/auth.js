@@ -1,12 +1,12 @@
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
-const sgMail = require('@sendgrid/mail');
+const { Resend } = require('resend');
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
-sgMail.setApiKey(process.env.MAIL_KEY);
+const resend = new Resend(process.env.MAIL_KEY);
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -132,12 +132,6 @@ exports.postSignup = (req, res, next) => {
   })
     .then(result => {
       res.redirect('/login');
-      return sgMail.send({
-        to: email,
-        from: 'shop@gmail.com',
-        subject: 'Signup succeeded!',
-        html: '<h1> You successfully signed up!</h1>'
-      });
     }).catch(err => {
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -177,22 +171,43 @@ exports.postReset = (req, res, next) => {
       .then(user => {
         if (!user) {
           req.flash('error', 'No account with that email found.');
-          return res.redirect('/reset');
+          res.redirect('/reset');
+          return null;
         }
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000;
         return user.save();
       })
       .then(result => {
-        res.redirect('/');
-        sgMail.send({
+        if (!result) return;
+        resend.emails.send({
+          from: 'onboarding@resend.dev',
           to: req.body.email,
-          from: 'shop@gmail.com',
           subject: 'Password reset',
           html: `
-            <p>You requested a password reset</p>
-            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>
-            `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #f9f9f9;">
+              <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <h2 style="color: #333333; margin-top: 0;">Wachtwoord resetten</h2>
+                <p style="color: #555555; line-height: 1.6;">Je hebt een wachtwoordreset aangevraagd. Klik op de knop hieronder om een nieuw wachtwoord in te stellen.</p>
+                <a href="http://localhost:3000/reset/${token}"
+                  style="display: inline-block; margin: 24px 0; padding: 12px 24px; background-color: #4a90e2; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                  Wachtwoord resetten
+                </a>
+                <p style="color: #999999; font-size: 13px; line-height: 1.6;">Deze link is 1 uur geldig. Als je geen reset hebt aangevraagd, kan je deze mail negeren.</p>
+                <hr style="border: none; border-top: 1px solid #eeeeee; margin: 24px 0;">
+                <p style="color: #bbbbbb; font-size: 12px; margin: 0;">Als de knop niet werkt, kopieer dan deze link: http://localhost:3000/reset/${token}</p>
+              </div>
+            </div>
+          `
+        })
+        .then(() => {
+          req.flash('success', 'Reset link verstuurd, check je email.');
+          res.redirect('/login');
+        })
+        .catch(err => {
+          console.log('Mail error:', err.message);
+          req.flash('error', 'Er ging iets mis bij het versturen van de email. Probeer het opnieuw.');
+          res.redirect('/reset');
         });
       })
       .catch(err => {
