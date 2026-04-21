@@ -140,6 +140,7 @@ app.use('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
+  console.error('[500 Error]', error);
   res.locals.isAuthenticated = req.session ? req.session.isLoggedIn : false;
   res.locals.csrfToken = req.session ? generateToken(req) : '';
   res.status(500).render('500', {pageTitle: 'Error!', path: '/500'});
